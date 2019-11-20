@@ -3,20 +3,9 @@ package stream;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
- 
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -25,79 +14,66 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
- 
+
 public class InterfaceClient extends JFrame implements ActionListener, KeyListener {
- 
-    // Extra variables
-    static String message = "";
+
     static String userName = "";
+
+    static JTextArea zoneHistoriqueMessage = new JTextArea();//100, 50);
+    static JTextArea zoneEnvoiMessage = new JTextArea();//100, 50);
+    JButton envoyerMessage = new JButton("Envoyer");
+    JScrollPane panneauScroll1, panneauScroll2;
  
-    // Networking Variables
-    static Socket socket = null;
-    static PrintWriter writer = null;
+    JMenuBar barreDeMenu = new JMenuBar();
  
-    // // Graphics Variables
-    static JTextArea msgRec = new JTextArea(100, 50);
-    static JTextArea msgSend = new JTextArea(100, 50);
-    JButton send = new JButton("Send");
-    JScrollPane pane2, pane1;
- 
-    JMenuBar bar = new JMenuBar();
- 
-    JMenu messanger = new JMenu("Messanger");
-    JMenuItem logOut = new JMenuItem("Log Out");
- 
-    JMenuItem s_keys = new JMenuItem("Shortcut Keys");
+    JMenu menuMessenger = new JMenu("Menu");
+    JMenuItem deconnection = new JMenuItem("Déconnexion");
 
  
     public InterfaceClient() {
-        super("Java Client");
-        setBounds(0, 0, 407, 495);
+        super("Messenger");
+        setBounds(0, 0, 500, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
         setLayout(null);
  
-        msgRec.setEditable(false);
-        msgRec.setBackground(Color.BLACK);
-        msgRec.setForeground(Color.WHITE);
+        zoneHistoriqueMessage.setEditable(false);
+        zoneHistoriqueMessage.setBackground(Color.BLACK);
+        zoneHistoriqueMessage.setForeground(Color.WHITE);
         //msgRec.addFocusListener(this);
-        msgRec.setText("");
+        zoneHistoriqueMessage.setText("");
  
-        msgRec.setWrapStyleWord(true);
-        msgRec.setLineWrap(true);
+        zoneHistoriqueMessage.setWrapStyleWord(true);
+        zoneHistoriqueMessage.setLineWrap(true);
  
-        pane2 = new JScrollPane(msgRec);
-        pane2.setBounds(0, 0, 400, 200);
-        pane2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(pane2);
+        panneauScroll1 = new JScrollPane(zoneHistoriqueMessage);
+        panneauScroll1.setBounds(0, 0, 400, 200);
+        panneauScroll1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(panneauScroll1);
  
-        msgSend.setBackground(Color.LIGHT_GRAY);
-        msgSend.setForeground(Color.BLACK);
-        msgSend.setLineWrap(true);
-        msgSend.setWrapStyleWord(true);
+        zoneEnvoiMessage.setBackground(Color.LIGHT_GRAY);
+        zoneEnvoiMessage.setForeground(Color.BLACK);
+        zoneEnvoiMessage.setLineWrap(true);
+        zoneEnvoiMessage.setWrapStyleWord(true);
  
-        msgSend.setText("Write Message here");
+        zoneEnvoiMessage.setText("Write Message here");
         //msgSend.addFocusListener(this);
-        msgSend.addKeyListener(this);
+        zoneEnvoiMessage.addKeyListener(this);
  
-        pane1 = new JScrollPane(msgSend);
-        pane1.setBounds(0, 200, 400, 200);
-        pane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        add(pane1);
+        panneauScroll2 = new JScrollPane(zoneEnvoiMessage);
+        panneauScroll2.setBounds(0, 200, 400, 200);
+        panneauScroll2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(panneauScroll2);
  
-        send.setBounds(0, 400, 400, 40);
-        add(send);
-        send.addActionListener(this);
+        envoyerMessage.setBounds(0, 400, 400, 40);
+        add(envoyerMessage);
+        envoyerMessage.addActionListener(this);
  
-        bar.add(messanger);
-        messanger.add(logOut);
-        logOut.addActionListener(this);
+        barreDeMenu.add(menuMessenger);
+        menuMessenger.add(deconnection);
+        deconnection.addActionListener(this);
  
-
-        s_keys.addActionListener(this);
- 
-        setJMenuBar(bar);
+        setJMenuBar(barreDeMenu);
         
         userName = JOptionPane.showInputDialog("User Name (Client)");
  
@@ -114,9 +90,9 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     public void actionPerformed(ActionEvent e) {
         Object scr = e.getSource();
  
-        if (scr == send) {
+        if (scr == envoyerMessage) {
             sendMessage();
-        } else if (scr == logOut) {
+        } else if (scr == deconnection) {
  
             System.exit(0);
  
@@ -137,7 +113,7 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     public void keyPressed(KeyEvent e) {
  
         if ((e.getKeyCode() == KeyEvent.VK_ENTER) && e.isShiftDown()) {
-            msgSend.append("\n");
+            zoneEnvoiMessage.append("\n");
  
         } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             sendMessage();
@@ -152,12 +128,12 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     private void sendMessage() {
         //writer.println(userName + " :" + msgSend.getText());
  
-        msgRec.append("\nMe: " + msgSend.getText());
+        zoneHistoriqueMessage.append("\nMe: " + zoneEnvoiMessage.getText());
         //writer.flush();
         //cursorUpdate();
  
-        msgSend.setText("");
-        msgSend.setCaretPosition(0);
+        zoneEnvoiMessage.setText("");
+        zoneEnvoiMessage.setCaretPosition(0);
     }
 
 }
