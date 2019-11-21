@@ -46,12 +46,7 @@ public class EchoClient {
                                + "the connection to:"+ args[0]);
             System.exit(1);
         }
-        
-        
-        //Interface graphique
-        InterfaceClient interfaceClient = new InterfaceClient();
-        
-               
+
         final BufferedReader socInFinal = socIn;
         Runnable ThreadReading = () -> {
             while(true) {

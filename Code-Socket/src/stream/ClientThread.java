@@ -39,7 +39,7 @@ public class ClientThread
                   } else if(EchoServerMultiThreaded.getClients().contains(this)) {
                     for(ClientThread ct : EchoServerMultiThreaded.getClients()) {
                         if(this != ct) {
-                          ct.envoyerMessage(this.getName() + " a dit : " + line);
+                          ct.envoyerMessage(line);
                         }
                     }
                   }
