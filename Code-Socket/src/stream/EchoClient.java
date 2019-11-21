@@ -13,7 +13,7 @@ import java.net.*;
 
 public class EchoClient {
 
- 
+
   /**
   *  main method
   *  accepts a connection, receives a message from client then sends an echo to the client
@@ -53,10 +53,12 @@ public class EchoClient {
         
                
         final BufferedReader socInFinal = socIn;
+        //thread pour print les msg recus
         Runnable ThreadReading = () -> {
             while(true) {
                 try {
-                    System.out.println(socInFinal.readLine());
+                    String message = socInFinal.readLine();
+                    interfaceClient.receiveMessage(message);
                 } catch (IOException e) {
                     
                 }
@@ -67,12 +69,24 @@ public class EchoClient {
         //ThreadReading.run();
         
         String line;
+        //thread actuel qui envoie les msg ecrits
         while (true) {
+            /*
         	line=stdIn.readLine();
         	if (line.equals(".")) break;
         	socOut.println(line);
         	//System.out.println("echo: " + socIn.readLine());
+        	*/
+            String message = interfaceClient.getMessageAEnvoyer();
+            if (!message.equals("")){
+                if (message.equals(".")){
+                     break;
+                }
+                socOut.println(message);
+            }
+
         }
+
       socOut.close();
       socIn.close();
       stdIn.close();

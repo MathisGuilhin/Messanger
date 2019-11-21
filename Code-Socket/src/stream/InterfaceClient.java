@@ -29,6 +29,9 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     JMenu menuMessenger = new JMenu("Menu");
     JMenuItem deconnection = new JMenuItem("Déconnexion");
 
+    String messageAEnvoyer= "";
+    boolean envoieMessage = false;
+
  
     public InterfaceClient() {
         super("Messenger");
@@ -88,11 +91,11 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        Object scr = e.getSource();
+        Object action = e.getSource();
  
-        if (scr == envoyerMessage) {
+        if (action == envoyerMessage) {
             sendMessage();
-        } else if (scr == deconnection) {
+        } else if (action == deconnection) {
  
             System.exit(0);
  
@@ -125,15 +128,36 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     }
 
  
-    private void sendMessage() {
+    public void sendMessage() {
         //writer.println(userName + " :" + msgSend.getText());
  
         zoneHistoriqueMessage.append("\nMe: " + zoneEnvoiMessage.getText());
         //writer.flush();
         //cursorUpdate();
+        messageAEnvoyer = zoneEnvoiMessage.getText();//userName+ " : "+zoneEnvoiMessage.getText();
  
         zoneEnvoiMessage.setText("");
         zoneEnvoiMessage.setCaretPosition(0);
     }
 
+    public boolean isEnvoieMessage() {
+        return envoieMessage;
+    }
+    public void messageEnvoye() {
+       envoieMessage = false;
+       messageAEnvoyer= "";
+    }
+
+
+    public String getMessageAEnvoyer() {
+        String message = messageAEnvoyer;
+        messageAEnvoyer= "";
+        return message;
+    }
+
+    public void receiveMessage(String message) {
+
+        zoneHistoriqueMessage.append(message);
+
+    }
 }
