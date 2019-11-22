@@ -32,6 +32,7 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
     JMenu menuMessenger = new JMenu("Menu");
     JMenuItem deconnection = new JMenuItem("Déconnexion");
     JMenuItem connection = new JMenuItem("Connexion");
+    JMenuItem fermer = new JMenuItem("Fermer");
 
     static PrintStream socOut = null;
  
@@ -87,6 +88,8 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
         connection.addActionListener(this);
         menuMessenger.add(deconnection);
         deconnection.addActionListener(this);
+        menuMessenger.add(fermer);
+        fermer.addActionListener(this);
 
         mainPanel.add(messagePanel,BorderLayout.CENTER);
         mainPanel.add(envoyerMessage, BorderLayout.SOUTH);
@@ -176,11 +179,16 @@ public class InterfaceClient extends JFrame implements ActionListener, KeyListen
         } else if (scr == deconnection) {
             socOut.println(userName + " a quitté le salon.");
             socOut.println("!quit");
-            System.exit(0);
+            connection.setEnabled(true);
         } else if (scr == connection) {
+            zoneHistoriqueMessage.setText("");
             socOut.println("!join");
             socOut.println(userName + " a rejoint le salon.");
             connection.setEnabled(false);
+        } else if (scr == fermer) {
+            socOut.println(userName + " a quitté le salon.");
+            socOut.println("!quit");
+            System.exit(0);
         }
     }
  

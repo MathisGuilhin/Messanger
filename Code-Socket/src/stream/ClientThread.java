@@ -36,13 +36,19 @@ public class ClientThread
                       EchoServerMultiThreaded.removeClient(this);
                   } else if(line.equals("!join")){
                       EchoServerMultiThreaded.addClient(this);
-                  } else if(EchoServerMultiThreaded.getClients().contains(this)) {
-                    for(ClientThread ct : EchoServerMultiThreaded.getClients()) {
-                        if(this != ct) {
-                          ct.envoyerMessage(line);
-                        }
-                    }
-                  }
+                      socOut.println(EchoServerMultiThreaded.getHistorique());
+				  } else if(EchoServerMultiThreaded.getClients().contains(this)) {
+					  EchoServerMultiThreaded.appendMessageHistorique(line);
+					  for(ClientThread ct : EchoServerMultiThreaded.getClients()) {
+							if(this != ct) {
+							  ct.envoyerMessage(line);
+							} else {
+								if(line.contains("a rejoint le salon.")){
+									ct.envoyerMessage(line);
+								}
+							}
+					}
+				  }
     		}
     	} catch (Exception e) {
         	System.err.println("Error in EchoServer:" + e); 
