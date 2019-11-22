@@ -23,7 +23,6 @@ public class EchoServerMultiThreaded {
     private static String relativePath = "tmp" + System.getProperty("file.separator") + "historique.txt";
     private static boolean choix = false;
     private static File sauvegarde;
-    private static FileWriter writerSauvegarde;
 
 
     public static void main(String args[]) {
