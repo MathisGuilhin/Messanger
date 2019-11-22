@@ -21,7 +21,6 @@ public class ClientThread
 
  	/**
   	* receives a request from client then sends an echo to the client
-  	* @param clientSocket the client socket
   	**/
 	public void run() {
     	  try {
@@ -38,7 +37,7 @@ public class ClientThread
                       EchoServerMultiThreaded.addClient(this);
                       socOut.println(EchoServerMultiThreaded.getHistorique());
 				  } else if(EchoServerMultiThreaded.getClients().contains(this)) {
-					  EchoServerMultiThreaded.appendMessageHistorique(line);
+					  EchoServerMultiThreaded.appendMessageHistorique(line+"\n");
 					  for(ClientThread ct : EchoServerMultiThreaded.getClients()) {
 							if(this != ct) {
 							  ct.envoyerMessage(line);
