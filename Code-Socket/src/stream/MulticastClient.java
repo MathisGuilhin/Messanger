@@ -15,6 +15,7 @@ public class MulticastClient {
             InetAddress groupAddr = InetAddress.getByName(args[0]);
             int groupPort = Integer.parseInt(args[1]);
             MulticastSocket s = new MulticastSocket(groupPort);
+            s.setLoopbackMode(false);
             s.joinGroup(groupAddr);
             // Build a datagram packet for a message
             // to send to the group
@@ -28,11 +29,12 @@ public class MulticastClient {
             while(true) {
                 // Build a datagram packet for response
                 byte[] buf = new byte[1000];
-                DatagramPacket recv = new
+                DatagramPacket recu = new
                         DatagramPacket(buf, buf.length);
                 // Receive a datagram packet response
-                s.receive(recv);
-                System.out.println(recv);
+                s.receive(recu);
+                String msgRec = new String(buf, 0, recu.getLength());
+                System.out.println("message reçu : " + msgRec);
             }
             // OK, I'm done talking - leave the group
         } catch (Exception e) {
